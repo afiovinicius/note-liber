@@ -1,0 +1,1 @@
+export { EditorTiptap } from "./tiptap";
