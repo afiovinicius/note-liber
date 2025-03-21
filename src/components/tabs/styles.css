@@ -1,0 +1,51 @@
+.tab-root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.tab-list {
+  width: 100%;
+  height: 100%;
+  max-width: 4.8rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-direction: column;
+}
+
+.tab-trigger,
+[data-state="inactive"].tab-trigger {
+  width: fit-content;
+  height: fit-content;
+  max-width: 4rem;
+  max-height: 4rem;
+  padding: 0.8rem;
+  border-radius: 0.4rem;
+  color: var(--sub-100);
+  background-color: transparent;
+  transition: all ease-in 0.3s;
+}
+
+.tab-trigger:hover {
+  color: var(--light);
+  background-color: var(--pollen);
+  transition: all ease-in 0.3s;
+}
+
+[data-state="active"].tab-trigger {
+  color: var(--light);
+  background-color: var(--sub-200);
+  transition: all ease-in 0.3s;
+}
+
+.tab-content {
+  width: 100%;
+  max-width: 80rem;
+  min-width: 60rem;
+  max-height: 60rem;
+  min-height: 46.4rem;
+  padding: 1.6rem 2.4rem;
+  position: relative;
+  background-color: var(--dark);
+}

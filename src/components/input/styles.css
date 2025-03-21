@@ -1,0 +1,34 @@
+.input-body {
+  color: var(--sub-100);
+  min-width: 6.4rem;
+  padding: 0.4rem;
+  border-bottom: 0.1rem solid var(--sub-100);
+  background: transparent;
+  transition: all 0.3s ease-in;
+}
+
+.input-body.full {
+  width: 100%;
+  max-width: none;
+}
+
+.input-body::placeholder {
+  color: var(--sub-100);
+}
+
+.input-body:hover,
+.input-body:focus {
+  color: var(--light);
+  border-color: var(--light);
+}
+
+.input-body:invalid {
+  color: red;
+  border-color: red;
+}
+
+.input-body:disabled {
+  opacity: 0.8;
+  cursor: default;
+  pointer-events: none;
+}

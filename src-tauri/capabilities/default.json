@@ -23,7 +23,10 @@
     "fs:allow-home-read",
     "fs:allow-home-write",
     "fs:allow-create",
-    "fs:deny-create"
+    "fs:deny-create",
+    "core:window:allow-set-size",
+    "core:window:allow-set-always-on-top",
+    "core:window:allow-set-resizable"
   ],
   "platforms": ["linux"]
 }

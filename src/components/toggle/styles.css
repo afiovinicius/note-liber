@@ -1,0 +1,37 @@
+.toggle {
+  color: var(--light);
+  padding: 0.8rem;
+  border-radius: 50rem;
+  transition: all 0.3s ease-in;
+}
+
+.toggle[data-state="on"] {
+  background: var(--pink);
+}
+
+.toggle[data-state="off"] {
+  background: var(--sub-300);
+}
+
+.toggle:hover {
+  color: var(--dark);
+  background: var(--pollen);
+  transition: all 0.3s ease-in-out;
+}
+
+.toggle.sm {
+  width: 3.4rem;
+  height: 3.4rem;
+}
+
+.toggle.lg {
+  width: 4rem;
+  height: 4rem;
+}
+
+.toggle.sizing {
+  width: fit-content;
+  height: 4rem;
+  line-height: 100%;
+  padding: 0.8rem 1.6rem;
+}

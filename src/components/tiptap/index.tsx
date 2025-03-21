@@ -2,6 +2,7 @@ import "./styles.css";
 
 import { useState, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
+import { toast } from "react-toastify";
 
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -38,15 +39,17 @@ import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
+import { fetchNotes } from "../../functions";
 
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 export const EditorTiptap = ({ fileName }: { fileName: string }) => {
-  const [content, setContent] = useState<any>();
   const [selectedHeading, setSelectedHeading] = useState<Level>();
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [linkText, setLinkText] = useState("");
+
+  const { contentNotes, setContentNotes } = fetchNotes();
 
   const editor = useEditor({
     extensions: [
@@ -58,7 +61,9 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       BulletList,
       OrderedList,
       ListItem,
-      TaskList,
+      TaskList.configure({
+        itemTypeName: "taskItem",
+      }),
       TaskItem.configure({
         nested: true,
       }),
@@ -78,21 +83,24 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
         },
       }),
       Link.configure({
-        openOnClick: false,
+        openOnClick: true,
         autolink: true,
         defaultProtocol: "https",
         protocols: ["http", "https", "ftp", "git"],
+        HTMLAttributes: {
+          class: "tiptap-link",
+        },
       }),
     ],
-    content,
+    content: contentNotes,
     onUpdate: ({ editor }) => {
       const jsonContent = editor.getJSON();
-      setContent(jsonContent);
+      setContentNotes(jsonContent);
 
       invoke("update_content_note", {
         fileName,
         newContent: jsonContent,
-      }).catch(console.error);
+      }).catch(toast.error);
     },
   });
 
@@ -104,7 +112,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
         editor.commands.setContent(data);
       }
     } catch (error) {
-      console.error("Erro ao carregar a nota:", error);
+      toast.error(`Erro ao carregar a nota: ${error}`);
     }
   };
 
@@ -149,7 +157,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
     setLinkText("");
   }
 
-  function handlePaste(event: any) {
+  function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
     const text = event.clipboardData.getData("text");
     if (/https?:\/\/[^\s]+/g.test(text)) {
       event.preventDefault();
@@ -225,25 +233,29 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
             value="0"
             style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
           >
-            <TextT size={20} />
+            Text
+            <TextT size={24} />
           </option>
           <option
             value="1"
             style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
           >
-            <TextHOne size={20} />
+            H1
+            <TextHOne size={24} />
           </option>
           <option
             value="2"
             style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
           >
-            <TextHTwo size={20} />
+            H2
+            <TextHTwo size={24} />
           </option>
           <option
             value="3"
             style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
           >
-            <TextHThree size={20} />
+            H3
+            <TextHThree size={24} />
           </option>
         </select>
 
@@ -251,37 +263,37 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
           onClick={toggleBold}
           className={editor.isActive("bold") ? "is-active" : ""}
         >
-          <TextB size={20} />
+          <TextB size={24} />
         </button>
         <button
           onClick={toggleItalic}
           className={editor.isActive("italic") ? "is-active" : ""}
         >
-          <TextItalic size={20} />
+          <TextItalic size={24} />
         </button>
         <button
           onClick={toggleUnderline}
           className={editor.isActive("underline") ? "is-active" : ""}
         >
-          <TextUnderline size={20} />
+          <TextUnderline size={24} />
         </button>
         <button
           onClick={toggleStrike}
           className={editor.isActive("strike") ? "is-active" : ""}
         >
-          <TextStrikethrough size={20} />
+          <TextStrikethrough size={24} />
         </button>
         <button
           onClick={() => toggleCode()}
           className={editor.isActive("code") ? "is-active" : ""}
         >
-          <CodeBlock size={20} />
+          <CodeBlock size={24} />
         </button>
         <button
           onClick={() => setShowLinkInput(!showLinkInput)}
           className={editor.isActive("link") ? "is-active" : ""}
         >
-          <LinkSimple size={20} />
+          <LinkSimple size={24} />
         </button>
         {showLinkInput && (
           <div className="link-input">
@@ -305,19 +317,19 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
           onClick={toggleBulletList}
           className={editor.isActive("bulletList") ? "is-active" : ""}
         >
-          <ListBullets size={20} />
+          <ListBullets size={24} />
         </button>
         <button
           onClick={toggleOrderedList}
           className={editor.isActive("orderedList") ? "is-active" : ""}
         >
-          <ListNumbers size={20} />
+          <ListNumbers size={24} />
         </button>
         <button
           onClick={toggleTaskList}
           className={editor.isActive("taskList") ? "is-active" : ""}
         >
-          <ListChecks size={20} />
+          <ListChecks size={24} />
         </button>
       </div>
       <EditorContent editor={editor} onPaste={handlePaste} />

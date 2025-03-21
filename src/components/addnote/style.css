@@ -1,0 +1,16 @@
+.form-add {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.group_form {
+  display: flex;
+  gap: 0.8rem;
+  flex-direction: column;
+}
+
+.form_error {
+  font-size: 1.2rem;
+  color: red;
+}

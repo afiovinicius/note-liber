@@ -42,9 +42,9 @@ fn add_note(app: AppHandle, name: String) -> Result<Vec<String>, String> {
     }
 
     let existing_notes = list_notes();
-    if existing_notes.len() >= 10 {
+    if existing_notes.len() >= 15 {
         return Err(format!(
-            "Limite de 10 notas atingido. Não é possível adicionar mais. ({}/10)",
+            "Limite de 15 notas atingido. Não é possível adicionar mais. ({}/15)",
             existing_notes.len()
         ));
     }

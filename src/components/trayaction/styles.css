@@ -1,0 +1,22 @@
+.tray-action {
+  position: absolute;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  z-index: 40;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.message {
+  color: var(--light);
+  width: 22.4rem;
+  font-size: 1.2rem;
+}
+
+.btns {
+  width: 22.4rem;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}

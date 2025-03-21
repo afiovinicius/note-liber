@@ -4,8 +4,8 @@ export const folderNameSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, { message: "O nome da pasta não pode estar vazio." })
-    .max(10, { message: "O nome da pasta não pode ter mais de 10 caracteres." })
+    .min(1, { message: "O nome não pode estar vazio." })
+    .max(10, { message: "O nome não pode ser maior que 10 caracteres." })
     .regex(/^[a-zA-Z0-9-_\.]+$/, {
       message:
         "O nome da pasta só pode conter letras, números, hífens, sublinhados e pontos.",

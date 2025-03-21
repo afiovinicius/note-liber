@@ -1,0 +1,22 @@
+.bar {
+  width: 8rem;
+  height: 60rem;
+  padding: 1.6rem;
+  color: var(--light);
+  background: var(--sub-300);
+  gap: 1.6rem;
+  align-items: center;
+  flex-direction: column;
+}
+
+.bar.active {
+  display: flex;
+}
+
+.bar.inactive {
+  display: none;
+}
+
+.bar .logo {
+  color: var(--light);
+}

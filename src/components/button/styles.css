@@ -1,0 +1,29 @@
+.btn {
+  text-align: center;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+}
+
+.btn.full {
+  width: 100%;
+  max-width: none;
+}
+
+.btn.dark {
+  color: var(--light);
+  background: var(--dark);
+  transition: all 0.3s ease-in;
+}
+
+.btn.brand {
+  color: var(--dark);
+  background: var(--pollen);
+  transition: all 0.3s ease-in;
+}
+
+.btn.dark:hover,
+.btn.brand:hover {
+  color: var(--light);
+  background: var(--pink);
+  transition: all 0.3s ease-in-out;
+}

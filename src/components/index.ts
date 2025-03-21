@@ -1,1 +1,10 @@
 export { EditorTiptap } from "./tiptap";
+export { Sidebar } from "./sidebar";
+export { TabRoot, TabList, TabTrigger, TabContent } from "./tabs";
+export { BtnPopover } from "./popover";
+export { BtnToggle } from "./toggle";
+export { Tray } from "./toolbar";
+export { Input } from "./input";
+export { Button } from "./button";
+export { FormAddNote } from "./addnote";
+export { TrayAction } from "./trayaction";
