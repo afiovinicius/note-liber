@@ -1,7 +1,15 @@
 import "./styles.css";
 
 import { useState, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { motion } from "framer-motion";
+import { useEditor, EditorContent, FloatingMenu } from "@tiptap/react";
+import {
+  DropdownMenu,
+  DropdownMenuPortal,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import { toast } from "react-toastify";
 
 import { invoke } from "@tauri-apps/api/core";
@@ -86,7 +94,6 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
         openOnClick: true,
         autolink: true,
         defaultProtocol: "https",
-        protocols: ["http", "https", "ftp", "git"],
         HTMLAttributes: {
           class: "tiptap-link",
         },
@@ -123,8 +130,6 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
   };
 
   useEffect(() => {
-    if (!editor) return;
-
     fetchNote();
 
     const unlisten = listen("note_updated", (event) => {
@@ -137,6 +142,10 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       unlisten.then((fn) => fn());
     };
   }, [editor]);
+
+  if (!editor) {
+    return null;
+  }
 
   const handleSetLink = () => {
     if (!editor || !linkUrl) return;
@@ -163,118 +172,118 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
     setLinkText("");
   };
 
-  function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
-    const text = event.clipboardData.getData("text");
-    if (/https?:\/\/[^\s]+/g.test(text)) {
-      event.preventDefault();
-      editor
-        ?.chain()
-        .focus()
-        .insertContent(`<a href="${text}">${text}</a>`)
-        .setLink({ href: text })
-        .run();
-    }
-  }
+  const HEADING_OPTIONS = [
+    { level: 0, label: "Texto", icon: <TextT size={24} /> },
+    { level: 1, label: "H1", icon: <TextHOne size={24} /> },
+    { level: 2, label: "H2", icon: <TextHTwo size={24} /> },
+    { level: 3, label: "H3", icon: <TextHThree size={24} /> },
+  ];
 
-  if (!editor) {
-    return null;
-  }
-
-  function setHeading(level: Level) {
-    if (level < 1) {
-      editor?.chain().focus().setParagraph().run();
-    } else {
-      editor?.chain().focus().toggleHeading({ level }).run();
-    }
-  }
-
-  function toggleBold() {
-    editor?.chain().focus().toggleBold().run();
-  }
-
-  function toggleItalic() {
-    editor?.chain().focus().toggleItalic().run();
-  }
-
-  function toggleUnderline() {
-    editor?.chain().focus().toggleUnderline().run();
-  }
-
-  function toggleStrike() {
-    editor?.chain().focus().toggleStrike().run();
-  }
-
-  function toggleCode() {
-    editor?.chain().focus().toggleCode().run();
-  }
-
-  function toggleBulletList() {
-    editor?.chain().focus().toggleBulletList().run();
-  }
-
-  function toggleOrderedList() {
-    editor?.chain().focus().toggleOrderedList().run();
-  }
-
-  function toggleTaskList() {
-    editor?.chain().focus().toggleTaskList().run();
-  }
+  const currentHeading =
+    HEADING_OPTIONS.find((option) =>
+      option.level === 0
+        ? editor.isActive("paragraph")
+        : editor.isActive("heading", { level: option.level })
+    ) || HEADING_OPTIONS[0];
 
   return (
     <div id="editor">
       <div className="toolbar">
-        <select onChange={(e) => setHeading(Number(e.target.value) as Level)}>
-          <option value="0">
-            Text
-            <TextT size={24} />
-          </option>
-          <option value="1">
-            H1
-            <TextHOne size={24} />
-          </option>
-          <option value="2">
-            H2
-            <TextHTwo size={24} />
-          </option>
-          <option value="3">
-            H3
-            <TextHThree size={24} />
-          </option>
-        </select>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild className="btn-action">
+            <button>{currentHeading.icon}</button>
+          </DropdownMenuTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuContent asChild sideOffset={4} align="start">
+              <motion.ul
+                initial={{ opacity: 0.3, y: -24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.8,
+                  ease: [0, 0.71, 0.2, 1.01],
+                }}
+              >
+                {HEADING_OPTIONS.map(({ level, icon }) => (
+                  <DropdownMenuItem
+                    key={level}
+                    asChild
+                    onSelect={() => {
+                      if (level === 0) {
+                        editor.chain().focus().setParagraph().run();
+                      } else {
+                        editor
+                          .chain()
+                          .focus()
+                          .toggleHeading({ level: level as Level })
+                          .run();
+                      }
+                    }}
+                  >
+                    <li
+                      className="btn-action"
+                      data-row-active={
+                        editor.isActive("heading", { level }) ||
+                        (level === 0 && editor.isActive("paragraph"))
+                      }
+                    >
+                      {icon}
+                    </li>
+                  </DropdownMenuItem>
+                ))}
+              </motion.ul>
+            </DropdownMenuContent>
+          </DropdownMenuPortal>
+        </DropdownMenu>
 
         <button
-          onClick={toggleBold}
-          className={editor.isActive("bold") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleBold().run();
+          }}
+          data-row-active={editor.isActive("bold")}
+          className="btn-action"
         >
           <TextB size={24} />
         </button>
         <button
-          onClick={toggleItalic}
-          className={editor.isActive("italic") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleItalic().run();
+          }}
+          data-row-active={editor.isActive("italic")}
+          className="btn-action"
         >
           <TextItalic size={24} />
         </button>
         <button
-          onClick={toggleUnderline}
-          className={editor.isActive("underline") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleUnderline().run();
+          }}
+          data-row-active={editor.isActive("underline")}
+          className="btn-action"
         >
           <TextUnderline size={24} />
         </button>
         <button
-          onClick={toggleStrike}
-          className={editor.isActive("strike") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleStrike().run();
+          }}
+          data-row-active={editor.isActive("strike")}
+          className="btn-action"
         >
           <TextStrikethrough size={24} />
         </button>
         <button
-          onClick={() => toggleCode()}
-          className={editor.isActive("code") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleCode().run();
+          }}
+          data-row-active={editor.isActive("code")}
+          className="btn-action"
         >
           <CodeBlock size={24} />
         </button>
         <button
           onClick={() => setShowLinkInput(!showLinkInput)}
-          className={editor.isActive("link") ? "is-active" : ""}
+          data-row-active={editor.isActive("link")}
+          className="btn-action"
         >
           <LinkSimple size={24} />
         </button>
@@ -301,25 +310,91 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
         )}
 
         <button
-          onClick={toggleBulletList}
-          className={editor.isActive("bulletList") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleBulletList().run();
+          }}
+          data-row-active={editor.isActive("bulletList")}
+          className="btn-action"
         >
           <ListBullets size={24} />
         </button>
         <button
-          onClick={toggleOrderedList}
-          className={editor.isActive("orderedList") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleOrderedList().run();
+          }}
+          data-row-active={editor.isActive("orderedList")}
+          className="btn-action"
         >
           <ListNumbers size={24} />
         </button>
         <button
-          onClick={toggleTaskList}
-          className={editor.isActive("taskList") ? "is-active" : ""}
+          onClick={() => {
+            editor?.chain().focus().toggleTaskList().run();
+          }}
+          data-row-active={editor.isActive("taskList")}
+          className="btn-action"
         >
           <ListChecks size={24} />
         </button>
       </div>
-      <EditorContent id="box-tiptap" editor={editor} onPaste={handlePaste} />
+
+      {editor && (
+        <FloatingMenu
+          editor={editor}
+          shouldShow={({ state }) => {
+            const { $from } = state.selection;
+            const currentLineText = $from.nodeBefore?.textContent;
+            return currentLineText === "/";
+          }}
+        >
+          <button
+            onClick={() => {
+              editor?.chain().focus().toggleBold().run();
+            }}
+            data-row-active={editor.isActive("bold")}
+            className="btn-action"
+          >
+            <TextB size={24} />
+          </button>
+          <button
+            onClick={() => {
+              editor?.chain().focus().toggleItalic().run();
+            }}
+            data-row-active={editor.isActive("italic")}
+            className="btn-action"
+          >
+            <TextItalic size={24} />
+          </button>
+          <button
+            onClick={() => {
+              editor?.chain().focus().toggleUnderline().run();
+            }}
+            data-row-active={editor.isActive("underline")}
+            className="btn-action"
+          >
+            <TextUnderline size={24} />
+          </button>
+          <button
+            onClick={() => {
+              editor?.chain().focus().toggleStrike().run();
+            }}
+            data-row-active={editor.isActive("strike")}
+            className="btn-action"
+          >
+            <TextStrikethrough size={24} />
+          </button>
+          <button
+            onClick={() => {
+              editor?.chain().focus().toggleCode().run();
+            }}
+            data-row-active={editor.isActive("code")}
+            className="btn-action"
+          >
+            <CodeBlock size={24} />
+          </button>
+        </FloatingMenu>
+      )}
+      <EditorContent id="box-tiptap" editor={editor} />
     </div>
   );
 };

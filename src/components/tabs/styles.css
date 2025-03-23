@@ -28,7 +28,7 @@
 }
 
 .tab-trigger:hover {
-  color: var(--light);
+  color: var(--dark);
   background-color: var(--pollen);
   transition: all ease-in 0.3s;
 }

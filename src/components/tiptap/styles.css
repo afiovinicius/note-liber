@@ -17,7 +17,7 @@
 }
 
 /* === Botões === */
-#editor button {
+.btn-action {
   width: 3.2rem;
   height: 3.2rem;
   background-color: var(--dark);
@@ -25,10 +25,16 @@
   padding: 0.4rem;
   border-radius: 0.4rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  list-style: none;
+  transition: all 0.3s ease-in;
 }
 
-#editor button.is-active {
+.btn-action:hover {
+  background-color: var(--sub-300);
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-action[data-row-active="true"] {
   background-color: var(--pink);
 }
 
@@ -89,7 +95,11 @@
   user-select: none;
 }
 
-.tiptap ul[data-type="taskList"] input[type="checkbox"] {
+.tiptap
+  ul[data-type="taskList"]
+  li[data-checked="false"]
+  label
+  input[type="checkbox"] {
   width: 1.4rem;
   height: 1.4rem;
   cursor: pointer;
@@ -103,6 +113,7 @@
 .tiptap
   ul[data-type="taskList"]
   li[data-checked="false"]
+  label
   input[type="checkbox"] {
   background-color: var(--pink);
 }
@@ -157,7 +168,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1.6rem;
 }
 
 /* === Placeholder do Editor === */
