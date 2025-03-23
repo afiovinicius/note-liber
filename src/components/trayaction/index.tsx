@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { Window, getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
+import { getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { Resize, TrashSimple } from "@phosphor-icons/react";
 
