@@ -30,7 +30,7 @@ export const TabList = ({ children }: Partial<TabsProps>) => {
 
 export const TabTrigger = ({ children, value }: TabsProps) => {
   return (
-    <Tabs.Trigger className="tab-trigger" value={value}>
+    <Tabs.Trigger className="tab-trigger" title={value} value={value}>
       {children}
     </Tabs.Trigger>
   );

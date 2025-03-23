@@ -23,6 +23,11 @@ import {
   TextUnderline,
 } from "@phosphor-icons/react";
 
+import { fetchNotes } from "../../functions";
+
+import { Input } from "../input";
+import { Button } from "../button";
+
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
@@ -39,12 +44,10 @@ import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
-import { fetchNotes } from "../../functions";
 
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 export const EditorTiptap = ({ fileName }: { fileName: string }) => {
-  const [selectedHeading, setSelectedHeading] = useState<Level>();
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [linkText, setLinkText] = useState("");
@@ -75,11 +78,8 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       }),
       Placeholder.configure({
         placeholder: ({ node }) => {
-          if (node.type.name === "heading") {
-            return "Digite um Título";
-          }
-
-          return "Adicione sua nota!";
+          if (node.type.name === "heading") return "Digite seu título aqui...";
+          return "Comece a escrever...";
         },
       }),
       Link.configure({
@@ -95,12 +95,18 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
     content: contentNotes,
     onUpdate: ({ editor }) => {
       const jsonContent = editor.getJSON();
+      const position = editor.state.selection.anchor;
+
       setContentNotes(jsonContent);
 
       invoke("update_content_note", {
         fileName,
         newContent: jsonContent,
       }).catch(toast.error);
+
+      requestAnimationFrame(() => {
+        editor.commands.setTextSelection(position);
+      });
     },
   });
 
@@ -132,7 +138,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
     };
   }, [editor]);
 
-  function setLink() {
+  const handleSetLink = () => {
     if (!editor || !linkUrl) return;
     const hasSelection = !editor.state.selection.empty;
 
@@ -155,7 +161,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
     setShowLinkInput(false);
     setLinkUrl("");
     setLinkText("");
-  }
+  };
 
   function handlePaste(event: React.ClipboardEvent<HTMLDivElement>) {
     const text = event.clipboardData.getData("text");
@@ -175,14 +181,11 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
   }
 
   function setHeading(level: Level) {
-    if (editor) {
-      if (level < 1) {
-        editor.chain().focus().setParagraph().run();
-      } else {
-        editor.chain().focus().toggleHeading({ level }).run();
-      }
+    if (level < 1) {
+      editor?.chain().focus().setParagraph().run();
+    } else {
+      editor?.chain().focus().toggleHeading({ level }).run();
     }
-    setSelectedHeading(level);
   }
 
   function toggleBold() {
@@ -218,42 +221,22 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
   }
 
   return (
-    <div>
-      <div>
-        <select
-          value={selectedHeading}
-          onChange={(e) => setHeading(Number(e.target.value) as Level)}
-          className={
-            editor.isActive("heading", { level: selectedHeading })
-              ? "is-active"
-              : ""
-          }
-        >
-          <option
-            value="0"
-            style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
-          >
+    <div id="editor">
+      <div className="toolbar">
+        <select onChange={(e) => setHeading(Number(e.target.value) as Level)}>
+          <option value="0">
             Text
             <TextT size={24} />
           </option>
-          <option
-            value="1"
-            style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
-          >
+          <option value="1">
             H1
             <TextHOne size={24} />
           </option>
-          <option
-            value="2"
-            style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
-          >
+          <option value="2">
             H2
             <TextHTwo size={24} />
           </option>
-          <option
-            value="3"
-            style={{ width: "24px", height: "24px", color: "#f5f5f5" }}
-          >
+          <option value="3">
             H3
             <TextHThree size={24} />
           </option>
@@ -296,20 +279,24 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
           <LinkSimple size={24} />
         </button>
         {showLinkInput && (
-          <div className="link-input">
-            <input
-              type="text"
-              placeholder="URL"
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Texto do Link"
-              value={linkText}
-              onChange={(e) => setLinkText(e.target.value)}
-            />
-            <button onClick={setLink}>Inserir</button>
+          <div className="drop-link">
+            <form className="form-link" onSubmit={handleSetLink}>
+              <Input
+                type="text"
+                placeholder="URL"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Texto do Link"
+                value={linkText}
+                onChange={(e) => setLinkText(e.target.value)}
+              />
+              <Button full styles="brand">
+                Inserir
+              </Button>
+            </form>
           </div>
         )}
 
@@ -332,7 +319,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
           <ListChecks size={24} />
         </button>
       </div>
-      <EditorContent editor={editor} onPaste={handlePaste} />
+      <EditorContent id="box-tiptap" editor={editor} onPaste={handlePaste} />
     </div>
   );
 };

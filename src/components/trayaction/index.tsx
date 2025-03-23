@@ -1,6 +1,6 @@
 import "./styles.css";
 
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Window, getCurrentWindow, LogicalSize } from "@tauri-apps/api/window";
 
 import { Resize, TrashSimple } from "@phosphor-icons/react";
 
@@ -24,8 +24,11 @@ export const TrayAction = ({
   const { handleRemoveNote } = fetchNotes();
   const { isOpen, setIsOpen } = usePopoverOpen();
 
+  const size = getCurrentWindow().innerSize();
+  const setSize = isResizeView ? size : new LogicalSize(800, 600);
   getCurrentWindow().setAlwaysOnTop(isResizeView);
   getCurrentWindow().setResizable(isResizeView);
+  getCurrentWindow().setSize(setSize as LogicalSize);
 
   return (
     <div className="tray-action">
@@ -65,9 +68,7 @@ export const TrayAction = ({
       <BtnToggle
         sizes="sm"
         pressed={isResizeView}
-        onPressedChange={() => {
-          setResizeView((prev) => !prev);
-        }}
+        onPressedChange={() => setResizeView((prev) => !prev)}
       >
         <Resize size={18} />
       </BtnToggle>
