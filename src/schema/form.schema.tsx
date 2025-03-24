@@ -18,3 +18,10 @@ export const folderNameSchema = z.object({
       message: "O nome da pasta não pode conter a barra '/'",
     }),
 });
+
+export const setLinkSchema = z.object({
+  linkUrl: z
+    .string()
+    .url({ message: "URL inválida. Deve começar com http ou https." }),
+  linkLabel: z.string().optional(),
+});

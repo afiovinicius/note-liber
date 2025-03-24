@@ -1,0 +1,49 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.trigger-arrow {
+  color: var(--light);
+  transition: all 0.3s ease-in;
+}
+
+.trigger[data-state="open"] .trigger-arrow {
+  transform: rotate(180deg);
+  transition: all 0.3s ease-in-out;
+}
+
+.drop-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 0.4rem;
+  border: 0.05rem solid var(--sub-200);
+  background: var(--dark);
+  list-style: none;
+  overflow: hidden;
+  min-width: 4rem;
+}
+
+.drop-item {
+  color: var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+  width: 100%;
+}
+
+.drop-item:hover {
+  background: var(--sub-200);
+  transition: all 0.3s ease-in-out;
+}
+
+.drop-item[data-row-active="true"] {
+  background: var(--pink);
+}

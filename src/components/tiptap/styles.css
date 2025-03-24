@@ -16,28 +16,6 @@
   overflow: auto;
 }
 
-/* === Botões === */
-.btn-action {
-  width: 3.2rem;
-  height: 3.2rem;
-  background-color: var(--dark);
-  color: var(--light);
-  padding: 0.4rem;
-  border-radius: 0.4rem;
-  cursor: pointer;
-  list-style: none;
-  transition: all 0.3s ease-in;
-}
-
-.btn-action:hover {
-  background-color: var(--sub-300);
-  transition: all 0.3s ease-in-out;
-}
-
-.btn-action[data-row-active="true"] {
-  background-color: var(--pink);
-}
-
 /* === Tipografia para TipTap === */
 .tiptap h1,
 .tiptap h2,
@@ -49,7 +27,6 @@
 
 .tiptap p {
   color: var(--light);
-  font-weight: lighter;
   margin-top: 0.4rem;
   margin-bottom: 0.8rem;
 }
@@ -90,32 +67,8 @@
 
 .tiptap ul[data-type="taskList"] li > label {
   flex: 0 0 auto;
-  margin-top: 0.4rem;
   margin-right: 0.8rem;
   user-select: none;
-}
-
-.tiptap
-  ul[data-type="taskList"]
-  li[data-checked="false"]
-  label
-  input[type="checkbox"] {
-  width: 1.4rem;
-  height: 1.4rem;
-  cursor: pointer;
-  overflow: hidden;
-  color: var(--light);
-  border-radius: 0.4rem;
-  background-color: var(--pink);
-  transition: all 0.3 ease-in;
-}
-
-.tiptap
-  ul[data-type="taskList"]
-  li[data-checked="false"]
-  label
-  input[type="checkbox"] {
-  background-color: var(--pink);
 }
 
 .tiptap ul[data-type="taskList"] li > div {
@@ -130,6 +83,47 @@
   margin: 0.4rem 0rem;
 }
 
+.tiptap ul[data-type="taskList"] li label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0.2rem;
+  overflow: hidden;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+  background-color: var(--sub-200);
+  position: relative;
+}
+
+.tiptap ul[data-type="taskList"] li label input[type="checkbox"]:checked {
+  background-color: var(--pink);
+}
+
+.tiptap ul[data-type="taskList"] li label input[type="checkbox"]::after {
+  content: "✓";
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transform: scale(0);
+  transition: transform 0.2s ease-in-out;
+}
+
+.tiptap
+  ul[data-type="taskList"]
+  li
+  label
+  input[type="checkbox"]:checked::after {
+  transform: scale(1);
+}
+
 /* === Código === */
 .tiptap code {
   background-color: var(--sub-300);
@@ -137,7 +131,7 @@
   border-radius: 0.4rem;
   color: var(--light);
   padding: 0.4rem 0.8rem;
-  font-family: "Hack";
+  font-family: "Hack", sans-serif;
   margin-top: 0.4rem;
   margin-bottom: 1rem;
 }
@@ -148,27 +142,6 @@
   margin-top: 0.4rem;
   margin-bottom: 1rem;
   text-decoration: underline;
-}
-
-.toolbar {
-  position: relative;
-}
-
-#editor .drop-link {
-  z-index: 20;
-  position: absolute;
-  top: 3.2rem;
-  background: var(--dark);
-  border-radius: 0.4rem;
-  border: 0.1rem solid var(--sub-200);
-}
-
-#editor .form-link {
-  padding: 0.8rem;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 1.6rem;
 }
 
 /* === Placeholder do Editor === */

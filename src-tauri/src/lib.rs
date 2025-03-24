@@ -14,22 +14,29 @@ fn list_notes() -> Vec<String> {
     let documents_path = format!("{}/Documents/{}/", home_dir, NOTE_VAULT);
 
     let mut notes = Vec::new();
-    if let Ok(entries) = fs::read_dir(documents_path) {
+
+    if let Ok(entries) = fs::read_dir(&documents_path) {
         for entry in entries.filter_map(Result::ok) {
             let path = entry.path();
             if path.is_file() && path.extension() == Some(std::ffi::OsStr::new("json")) {
                 if let Some(filename) = path.file_name() {
                     if let Some(name) = filename.to_str() {
-                        notes.push(name.to_string());
+                        if let Ok(metadata) = fs::metadata(&path) {
+                            let created_time = metadata.created().or_else(|_| metadata.modified());
+
+                            if let Ok(time) = created_time {
+                                notes.push((name.to_string(), time));
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    notes.sort();
-    notes.reverse();
-    notes
+    notes.sort_by_key(|(_, time)| *time);
+
+    notes.into_iter().map(|(name, _)| name).collect()
 }
 
 #[tauri::command]

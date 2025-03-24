@@ -1,1 +1,1 @@
-export { folderNameSchema } from "./form.schema";
+export { folderNameSchema, setLinkSchema } from "./form.schema";

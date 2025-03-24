@@ -10,6 +10,7 @@
 .input-body.full {
   width: 100%;
   max-width: none;
+  min-width: none;
 }
 
 .input-body::placeholder {

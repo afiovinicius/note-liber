@@ -1,0 +1,39 @@
+.toolbar-root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 0.4rem;
+  background: var(--sub-300);
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  position: relative;
+  border-radius: 0.4rem;
+  background: var(--dark);
+}
+
+.toolbar-item {
+  color: var(--light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in;
+}
+
+.toolbar-item:hover {
+  background: var(--pink);
+  transition: all 0.3s ease-in-out;
+}
+
+.toolbar-item[data-row-active="true"] {
+  background: var(--pink);
+}
