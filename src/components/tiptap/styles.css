@@ -38,7 +38,9 @@
   padding: 0.2rem;
   margin-top: 0.4rem;
   margin-bottom: 1rem;
+  margin-left: 1rem;
   list-style-position: inside;
+  font-family: "Inter", sans-serif;
 }
 
 .tiptap ul {
@@ -51,8 +53,6 @@
 
 .tiptap ul li p,
 .tiptap ol li p {
-  font-size: 1.4rem;
-  font-weight: 400;
   margin: 0.4rem 0rem;
 }
 
@@ -67,6 +67,7 @@
 
 .tiptap ul[data-type="taskList"] li > label {
   flex: 0 0 auto;
+  margin-top: 0.3rem;
   margin-right: 0.8rem;
   user-select: none;
 }
@@ -87,8 +88,8 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 1.8rem;
+  height: 1.8rem;
   padding: 0.2rem;
   overflow: hidden;
   border-radius: 0.4rem;

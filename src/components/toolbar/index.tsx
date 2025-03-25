@@ -152,8 +152,8 @@ export const ToolBar = ({ isEditor }: ToolBarProps) => {
       <ToolbarGroup>
         <ToolbarItem
           value="Code Block"
-          dataState={isEditor.isActive("code")}
-          action={() => isEditor?.chain().focus().toggleCode().run()}
+          dataState={isEditor.isActive("codeBlock")}
+          action={() => isEditor?.chain().focus().toggleCodeBlock().run()}
         >
           <CodeBlock size={24} />
         </ToolbarItem>

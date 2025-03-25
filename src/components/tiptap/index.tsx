@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
+import { all, createLowlight } from "lowlight";
+
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Underline from "@tiptap/extension-underline";
@@ -22,12 +24,35 @@ import Placeholder from "@tiptap/extension-placeholder";
 import BulletList from "@tiptap/extension-bullet-list";
 import ListItem from "@tiptap/extension-list-item";
 import OrderedList from "@tiptap/extension-ordered-list";
+import ListKeymap from "@tiptap/extension-list-keymap";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
 import Heading from "@tiptap/extension-heading";
+import History from "@tiptap/extension-history";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+
+import css from "highlight.js/lib/languages/css";
+import js from "highlight.js/lib/languages/javascript";
+import ts from "highlight.js/lib/languages/typescript";
+import py from "highlight.js/lib/languages/python";
+import json from "highlight.js/lib/languages/json";
+import html from "highlight.js/lib/languages/xml";
+import markdown from "highlight.js/lib/languages/markdown";
+
+import "highlight.js/styles/github-dark.css";
+
+const lowlight = createLowlight(all);
+
+lowlight.register("css", css);
+lowlight.register("js", js);
+lowlight.register("ts", ts);
+lowlight.register("py", py);
+lowlight.register("json", json);
+lowlight.register("html", html);
+lowlight.register("markdown", markdown);
 
 import { fetchNotes } from "../../functions";
 
@@ -47,6 +72,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       BulletList,
       OrderedList,
       ListItem,
+      ListKeymap,
       TaskList.configure({
         itemTypeName: "taskItem",
       }),
@@ -55,6 +81,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       }),
       Text,
       Document,
+      History,
       Paragraph,
       Heading.configure({
         levels: [1, 2, 3],
@@ -74,11 +101,14 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
           target: "_blank",
         },
       }),
+      CodeBlockLowlight.configure({
+        lowlight,
+      }),
     ],
     content: contentNotes,
     onUpdate: ({ editor }) => {
       const jsonContent = editor.getJSON();
-      const position = editor.state.selection.anchor;
+      const selection = editor.state.selection;
 
       setContentNotes(jsonContent);
 
@@ -88,10 +118,16 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       }).catch(toast.error);
 
       requestAnimationFrame(() => {
-        editor.commands.setTextSelection(position);
+        if (editor.view.hasFocus()) {
+          editor.commands.focus(selection.anchor);
+        }
       });
     },
   });
+
+  if (!editor) {
+    return null;
+  }
 
   const fetchNote = async () => {
     try {
@@ -118,10 +154,6 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       unlisten.then((fn) => fn());
     };
   }, [editor]);
-
-  if (!editor) {
-    return null;
-  }
 
   return (
     <div id="editor">
