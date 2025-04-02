@@ -30,8 +30,12 @@ import TaskList from "@tiptap/extension-task-list";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
+import Typography from "@tiptap/extension-typography";
 import Heading from "@tiptap/extension-heading";
 import History from "@tiptap/extension-history";
+import Dropcursor from "@tiptap/extension-dropcursor";
+import HorizontalRule from "@tiptap/extension-horizontal-rule";
+import Blockquote from "@tiptap/extension-blockquote";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 
 import css from "highlight.js/lib/languages/css";
@@ -59,6 +63,8 @@ import { fetchNotes } from "../../functions";
 import { ToolBar } from "../toolbar";
 import { FloatMenu } from "../floatingmenu";
 
+import { SelectAllExtension, DragHandleExtension } from "./extensions";
+
 export const EditorTiptap = ({ fileName }: { fileName: string }) => {
   const { contentNotes, setContentNotes } = fetchNotes();
 
@@ -73,6 +79,7 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       OrderedList,
       ListItem,
       ListKeymap,
+      HorizontalRule,
       TaskList.configure({
         itemTypeName: "taskItem",
       }),
@@ -80,9 +87,11 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
         nested: true,
       }),
       Text,
+      Typography,
       Document,
       History,
       Paragraph,
+      Blockquote,
       Heading.configure({
         levels: [1, 2, 3],
       }),
@@ -104,6 +113,13 @@ export const EditorTiptap = ({ fileName }: { fileName: string }) => {
       CodeBlockLowlight.configure({
         lowlight,
       }),
+      Dropcursor.configure({
+        color: "#ebc771",
+        width: 2,
+      }),
+      // Custom Extensions
+      SelectAllExtension,
+      DragHandleExtension,
     ],
     content: contentNotes,
     onUpdate: ({ editor }) => {

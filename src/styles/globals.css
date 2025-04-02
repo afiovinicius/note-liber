@@ -74,6 +74,8 @@ img {
 }
 
 hr {
+  cursor: pointer;
+  color: var(--sub-200);
   background-color: var(--sub-200);
 }
 

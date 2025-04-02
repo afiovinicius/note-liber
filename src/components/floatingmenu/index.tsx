@@ -4,6 +4,7 @@ import {
   TextUnderline,
   TextStrikethrough,
   CodeBlock,
+  Minus,
 } from "@phosphor-icons/react";
 
 import { ToolbarGroup, ToolbarItem, ToolbarRoot } from "../toolbar/modules";
@@ -41,6 +42,12 @@ export const FloatMenu = ({ isEditor }: FloatMenuProps) => {
       action: () => isEditor?.chain().focus().toggleCode().run(),
       isActive: isEditor.isActive("code"),
       icon: <CodeBlock size={24} />,
+    },
+    {
+      value: "Divider",
+      action: () => isEditor?.chain().focus().setHorizontalRule().run(),
+      isActive: isEditor.isActive("horizontalRule"),
+      icon: <Minus size={24} />,
     },
   ];
 

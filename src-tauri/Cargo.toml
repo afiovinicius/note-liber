@@ -1,6 +1,6 @@
 [package]
 name = "note-liber"
-version = "1.2.3"
+version = "2.0.0"
 description = "Note Liber is a simple sticky notes app for Linux."
 authors = ["Afio Vinícius"]
 edition = "2021"

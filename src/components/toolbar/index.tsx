@@ -7,6 +7,7 @@ import {
   ListBullets,
   ListChecks,
   ListNumbers,
+  Quotes,
   TextB,
   TextHOne,
   TextHThree,
@@ -73,6 +74,12 @@ export const ToolBar = ({ isEditor }: ToolBarProps) => {
       action: () => isEditor.chain().focus().toggleStrike().run(),
       isActive: isEditor.isActive("strike"),
       icon: <TextStrikethrough size={24} />,
+    },
+    {
+      value: "Quotes",
+      action: () => isEditor.chain().focus().toggleBlockquote().run(),
+      isActive: isEditor.isActive("blockquote"),
+      icon: <Quotes size={24} />,
     },
   ];
 

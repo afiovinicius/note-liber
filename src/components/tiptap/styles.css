@@ -155,3 +155,25 @@
   pointer-events: none;
   padding-left: 0.4rem;
 }
+
+/* === Divider === */
+.tiptap hr {
+  border-top: 0.2rem solid var(--sub-200);
+  margin-top: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.tiptap hr.ProseMirror-selectednode {
+  border-top: 0.2rem solid var(--pollen);
+}
+
+/* === Blockquote === */
+.tiptap blockquote {
+  border-left: 0.4rem solid var(--sub-200);
+  margin: 0.8rem 0rem;
+  padding-left: 0.8rem;
+}
+
+.tiptap blockquote:first-child {
+  margin-top: 0;
+}

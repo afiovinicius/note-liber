@@ -1,0 +1,12 @@
+.draggable-item {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.drag-handle {
+  cursor: grab;
+  position: relative;
+  color: var(--light);
+  fill: var(--light);
+}
